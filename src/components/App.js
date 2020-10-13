@@ -14,7 +14,7 @@ import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
 import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
-import * as auth from '../auth.js';
+import * as auth from '../utils/auth.js';
 import InfoTooltip from './InfoTooltip';
 import PopupDeleteCard from './PopupDeleteCard';
 
@@ -37,7 +37,7 @@ function App() {
     name: '',
     link: '',
     email: ''
-  }); console.log(headerTitle);
+  });
 
   const history = useHistory();
 
@@ -158,13 +158,11 @@ function App() {
 
 
   function tokenCheck() {
-    console.log(loggedIn);
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth.getContent(jwt)
         .then((res) => {
           if (res) {
-            console.log(res.data);
             setHeaderTitle({
               name: "Выйти",
               link: "signin",
@@ -178,8 +176,38 @@ function App() {
     }
   }
 
-  function handleSubmitRegister(value) {
-    setIsInfoTooltip(value);
+  function signOut() {
+    localStorage.removeItem('jwt');
+    history.push('/login');
+  }
+
+  function handleLogin(email, password) {
+    auth.authorize(email, password)
+      .then(data => {
+        if (data.token) {
+          tokenCheck();
+          history.push('/');
+        }
+      })
+      .catch((err) => console.log(err));
+
+    return;
+  }
+
+  function handleRegister(email, password) {
+    auth.register(email, password)
+      .then(data => {
+        if (data.data) {
+          setIsResStatusOk(true);
+          setIsInfoTooltip(true);
+          history.push('/signin');
+        }
+      })
+      .catch((err) => {
+        setIsResStatusOk(false);
+        setIsInfoTooltip(true);
+        return Promise.reject(`${err}`);
+      });
   }
 
   return (
@@ -187,7 +215,10 @@ function App() {
       <CardsContext.Provider value={cards}>
         <div className="root">
           <div className="page">
-            <Header title={headerTitle} />
+            <Header
+              title={headerTitle}
+              onSignOut={signOut}
+            />
             <Switch>
 
               <ProtectedRoute exact path="/"
@@ -206,10 +237,8 @@ function App() {
 
               <Route path="/signup">
                 <Register
-                  submitRegister={handleSubmitRegister}
-                  setStatus={(value => setIsResStatusOk(value))}
-                  loggedIn={value => setLoggedIn(value)}
                   setTitle={value => setHeaderTitle(value)}
+                  onRegister={handleRegister}
                 />
               </Route>
 
@@ -218,6 +247,7 @@ function App() {
                   setTitle={value => setHeaderTitle(value)}
                   loggedIn={value => setLoggedIn(value)}
                   tokenCheck={tokenCheck}
+                  onLogin={handleLogin}
                 />
               </Route>
 

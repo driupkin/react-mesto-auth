@@ -1,14 +1,31 @@
 import React from 'react';
 
 function SignForm(props) {
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    function handleEmailChange(e) {
+        setEmail(e.target.value);
+    }
+
+    function handlePassChange(e) {
+        setPassword(e.target.value);
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        props.onChangeData(email, password);
+    }
+
     return (
         <section className="sign">
             <div className="sign__container">
                 <h2 className="sign__title">{props.title}</h2>
-                <form className="sign-form" onSubmit={props.onSubmit}>
+                <form className="sign-form" onSubmit={handleSubmit}>
                     <fieldset className="sign-form__field">
                         <input
-                            onChange={props.onEmailChange}
+                            value={email}
+                            onChange={handleEmailChange}
                             name="email"
                             placeholder="Email"
                             className="sign-form__input"
@@ -19,7 +36,8 @@ function SignForm(props) {
                             maxLength="30"
                         />
                         <input
-                            onChange={props.onPassChange}
+                            value={password}
+                            onChange={handlePassChange}
                             name="password"
                             placeholder="Пароль"
                             className="sign-form__input"

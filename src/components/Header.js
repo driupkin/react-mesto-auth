@@ -1,14 +1,6 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 function Header(props) {
-  const history = useHistory();
-
-  function signOut() {
-    localStorage.removeItem('jwt', 'headerTitle');
-    localStorage.removeItem('headerTitle');
-    history.push('/login');
-  }
 
   return (
     <header className="header">
@@ -17,7 +9,7 @@ function Header(props) {
         <a
           className="header__link"
           href={`/${props.title.link}`}
-          onClick={signOut}
+          onClick={props.onSignOut}
         >{props.title.name}
         </a>
       </h2>
