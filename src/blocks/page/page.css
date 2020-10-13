@@ -1,0 +1,12 @@
+.page {
+    max-width: 1160px;
+    min-width: 300px;
+    margin: auto;
+    padding: 0 20px 0;
+}
+
+@media screen and (max-width: 550px) {
+    .page {
+        padding: 0;
+    }
+}

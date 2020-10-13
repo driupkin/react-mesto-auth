@@ -1,0 +1,10 @@
+@import url('../element/__title/element__title.css');
+@import url('../element/__image/element__image.css');
+@import url('./__paragraph/element__paragraph.css');
+@import url('./__trash/element__trash.css');
+@import url('./__trash/_active/element__trash_active.css');
+.element {
+    width: 282px;
+    background-color: white;
+    border-radius: 10px;
+}

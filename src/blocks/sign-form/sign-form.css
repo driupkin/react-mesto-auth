@@ -1,0 +1,8 @@
+@import url('./__field/sing-form__field.css');
+@import url('./__input/sign-form__input.css');
+@import url('./__button/sign-form__button.css');
+.sign-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

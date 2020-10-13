@@ -1,0 +1,19 @@
+.sign-form__input {
+    width: 100%;
+    padding: 0 0 13px;
+    border: 0;
+    border-bottom: 2px solid #CCCCCC;
+    background-color: transparent;
+    margin-bottom: 30px;
+    outline: none;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #CCCCCC;
+}
+
+.sign-form__input:last-child {
+    margin-bottom: 216px;
+}

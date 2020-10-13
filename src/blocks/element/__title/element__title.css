@@ -1,0 +1,6 @@
+.element__title {
+    max-width: 246px;
+    display: flex;
+    margin: 0 auto 31px 21px;
+    align-items: center;
+}
