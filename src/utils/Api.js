@@ -1,4 +1,6 @@
- class Api {
+import { BASE_URL } from './auth';
+
+class Api {
     constructor({ url, headers }) {
         this.url = url;
         this.headers = headers;
@@ -92,19 +94,22 @@
 }
 
 const apiMe = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-13/users/me',
+    // url: 'https://mesto.nomoreparties.co/v1/cohort-13/users/me',
+    url: `${BASE_URL}/users/me`,
     headers: {
-        authorization: '719abc6c-853b-49cf-a6ae-f91d269216f8',
-        'Content-Type': 'application/json'
+        // authorization: '719abc6c-853b-49cf-a6ae-f91d269216f8',
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('jwt')}`
     }
 });
 
 const apiCards = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-13/cards',
+    // url: 'https://mesto.nomoreparties.co/v1/cohort-13/cards',
+    url: `${BASE_URL}/cards`,
     headers: {
-        authorization: '719abc6c-853b-49cf-a6ae-f91d269216f8',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('jwt')}`
     }
 });
 
-export {apiMe, apiCards};
+export { apiMe, apiCards };

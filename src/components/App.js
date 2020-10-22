@@ -166,8 +166,9 @@ function App() {
             setHeaderTitle({
               name: "Выйти",
               link: "signin",
-              email: res.data.email
-            })
+              email: res.email
+            });
+            setCurrentUser(res);
             setLoggedIn(true);
             history.push('/');
           }
