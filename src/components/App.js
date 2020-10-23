@@ -44,26 +44,6 @@ function App() {
   React.useEffect(() => tokenCheck(), [loggedIn]);
 
   React.useEffect(() => {
-    apiMe.getData()
-      .then(data => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  React.useEffect(() => {
-    apiCards.getData()
-      .then(data => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  React.useEffect(() => {
     function closeAllPopupsByOverlay(e) {
       if (e.target.classList.contains('popup_opened'))
         closeAllPopups();
@@ -136,7 +116,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     (isLiked ? apiCards.deleteLike(card._id) : apiCards.putLike(card._id))
       .then(newCard => {
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
@@ -160,7 +140,7 @@ function App() {
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-      auth.getContent(jwt)
+      auth.getContent(jwt, 'users/me')
         .then((res) => {
           if (res) {
             setHeaderTitle({
@@ -168,6 +148,20 @@ function App() {
               link: "signin",
               email: res.email
             });
+            // Получаем карточки
+            auth.getContent(jwt, 'cards')
+              .then(data => {
+                // Если пользователь удален, заполняем ключ owner
+                data.map(element => {
+                  if (!element.owner) {
+                    element.owner = "Пользователь удален!";
+                  }
+                });
+                setCards(data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
             setCurrentUser(res);
             setLoggedIn(true);
             history.push('/');
@@ -247,7 +241,6 @@ function App() {
                 <Login
                   setTitle={value => setHeaderTitle(value)}
                   loggedIn={value => setLoggedIn(value)}
-                  tokenCheck={tokenCheck}
                   onLogin={handleLogin}
                 />
               </Route>

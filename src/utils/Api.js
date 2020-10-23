@@ -18,11 +18,7 @@ class Api {
         console.log('_handleResponseError')
         return Promise.reject(err.message)
     }
-    getData() {
-        return fetch(this.url, { headers: this.headers })
-            .then(this._handleResponse)
-            .catch(this._handleResponseError)
-    }
+    
     editProfile(values) {
         return fetch(this.url, {
             method: 'PATCH',
@@ -59,7 +55,7 @@ class Api {
     }
     putLike(id) {
         return fetch(
-            `${this.url}/likes/${id}`,
+            `${this.url}/${id}/likes`,
             {
                 headers: this.headers,
                 method: 'PUT',
@@ -69,7 +65,7 @@ class Api {
     }
     deleteLike(id) {
         return fetch(
-            `${this.url}/likes/${id}`,
+            `${this.url}/${id}/likes`,
             {
                 headers: this.headers,
                 method: 'DELETE',
@@ -94,17 +90,14 @@ class Api {
 }
 
 const apiMe = new Api({
-    // url: 'https://mesto.nomoreparties.co/v1/cohort-13/users/me',
     url: `${BASE_URL}/users/me`,
     headers: {
-        // authorization: '719abc6c-853b-49cf-a6ae-f91d269216f8',
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
     }
 });
 
 const apiCards = new Api({
-    // url: 'https://mesto.nomoreparties.co/v1/cohort-13/cards',
     url: `${BASE_URL}/cards`,
     headers: {
         'Content-Type': 'application/json',

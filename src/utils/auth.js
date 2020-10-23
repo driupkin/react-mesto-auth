@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'https://dri.students.nomoreparties.space';
+// export const BASE_URL = 'http://localhost:3000';
 
 function handleResponse(res) {
     if (res.ok) {
@@ -45,8 +46,8 @@ export const authorize = (email, password) => {
         .catch(handleResponseError);
 };
 
-export const getContent = (token) => {
-    return fetch(`${BASE_URL}/users/me`, {
+export const getContent = (token, rout) => {
+    return fetch(`${BASE_URL}/${rout}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
