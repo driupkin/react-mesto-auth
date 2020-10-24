@@ -173,7 +173,7 @@ function App() {
 
   function signOut() {
     localStorage.removeItem('jwt');
-    history.push('/login');
+    history.push('/signin');
   }
 
   function handleLogin(email, password) {
