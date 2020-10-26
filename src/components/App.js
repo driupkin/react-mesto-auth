@@ -87,7 +87,7 @@ function App() {
   }
 
   function handleUpdateUser(values) {
-    apiMe.editProfile(values)
+    apiMe(localStorage.getItem('jwt')).editProfile(values)
       .then(data => {
         setCurrentUser(data);
       })
@@ -97,7 +97,7 @@ function App() {
   }
 
   function handleUpdateAvatar(url) {
-    apiMe.changeAvatar(url.avatar)
+    apiMe(localStorage.getItem('jwt')).changeAvatar(url.avatar)
       .then(data => {
         setCurrentUser(data);
       })
@@ -107,7 +107,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(values) {
-    apiCards.addCard(values)
+    apiCards(localStorage.getItem('jwt')).addCard(values)
       .then(newCard => setCards([...cards, newCard]))
       .catch((err) => {
         console.log(err);
@@ -117,7 +117,9 @@ function App() {
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i === currentUser._id);
-    (isLiked ? apiCards.deleteLike(card._id) : apiCards.putLike(card._id))
+    (isLiked
+      ? apiCards(localStorage.getItem('jwt')).deleteLike(card._id)
+      : apiCards(localStorage.getItem('jwt')).putLike(card._id))
       .then(newCard => {
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         setCards(newCards);
@@ -128,14 +130,13 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    apiCards.deleteCard(card._id)
+    apiCards(localStorage.getItem('jwt')).deleteCard(card._id)
       .then(() => {
         const newCards = cards.filter(item => item._id === card._id ? '' : item);
         setCards(newCards);
       }
       );
   }
-
 
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
@@ -169,6 +170,7 @@ function App() {
         })
         .catch((err) => console.log(err));
     }
+    return;
   }
 
   function signOut() {
@@ -181,10 +183,13 @@ function App() {
       .then(data => {
         if (data.token) {
           tokenCheck();
-          history.push('/');
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsResStatusOk(false);
+        setIsInfoTooltip(true);
+      });
 
     return;
   }
@@ -192,7 +197,7 @@ function App() {
   function handleRegister(email, password) {
     auth.register(email, password)
       .then(data => {
-        if (data.data) {
+        if (data) {
           setIsResStatusOk(true);
           setIsInfoTooltip(true);
           history.push('/signin');

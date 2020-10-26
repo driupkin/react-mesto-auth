@@ -1,5 +1,5 @@
-export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
-// export const BASE_URL = 'http://localhost:3000';
+// export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
+export const BASE_URL = 'http://localhost:3000';
 
 function handleResponse(res) {
     if (res.ok) {

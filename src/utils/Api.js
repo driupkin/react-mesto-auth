@@ -89,19 +89,19 @@ class Api {
     }
 }
 
-const apiMe = new Api({
+const apiMe = (token) => new Api({
     url: `${BASE_URL}/users/me`,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${localStorage.getItem('jwt')}`
+        'Authorization': token
     }
 });
 
-const apiCards = new Api({
+const apiCards = (token) => new Api({
     url: `${BASE_URL}/cards`,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${localStorage.getItem('jwt')}`
+        'Authorization': token
     }
 });
 
