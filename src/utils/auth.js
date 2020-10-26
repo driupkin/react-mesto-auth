@@ -1,5 +1,4 @@
-// export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
 
 function handleResponse(res) {
     if (res.ok) {
@@ -25,7 +24,7 @@ export const register = (email, password) => {
     })
     .then(handleResponse)
     .then(data => {return data})
-    .catch((err) => console.log(err));
+    .catch(handleResponseError);
 };
 
 export const authorize = (email, password) => {

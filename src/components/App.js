@@ -204,10 +204,12 @@ function App() {
         }
       })
       .catch((err) => {
+        console.log(err);
         setIsResStatusOk(false);
         setIsInfoTooltip(true);
-        return Promise.reject(`${err}`);
       });
+      
+    return;
   }
 
   return (
