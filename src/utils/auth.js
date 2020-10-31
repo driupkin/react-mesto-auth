@@ -9,6 +9,8 @@ function handleResponse(res) {
                 if (data.validation) {
                     return Promise.reject(data.validation.body.message);
 
+                } else {
+                    return Promise.reject(data.message);
                 }
             })
     }

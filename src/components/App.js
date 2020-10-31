@@ -218,7 +218,7 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
         setIsResStatusOk(false);
         setIsInfoTooltip(true);
       });
