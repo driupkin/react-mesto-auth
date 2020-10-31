@@ -1,11 +1,16 @@
-export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
-
+//export const BASE_URL = 'https://api.dri.students.nomoreparties.space';
+export const BASE_URL = 'http://localhost:3000'
 function handleResponse(res) {
     if (res.ok) {
         return res.json();
     } else {
-        console.log(res)
-        return Promise.reject(`Ошибка: ${res.statusText}`)
+        return res.json()
+            .then(data => {
+                if (data.validation) {
+                    return Promise.reject(data.validation.body.message);
+
+                }
+            })
     }
 }
 
