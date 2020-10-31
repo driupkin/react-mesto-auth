@@ -29,6 +29,7 @@ function App() {
     about: '',
     avatar: ''
   });
+  const [error, setError] = React.useState('Что-то пошло не так!');
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [isInfoTooltip, setIsInfoTooltip] = React.useState();
@@ -199,7 +200,7 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
         setIsResStatusOk(false);
         setIsInfoTooltip(true);
       });
@@ -297,6 +298,7 @@ function App() {
             onClose={closeAllPopups}
             isStatusTitleOk={isResStatusOk}
             isStatusIconOk={isResStatusOk}
+            error={error}
           />
         </div>
       </CardsContext.Provider>

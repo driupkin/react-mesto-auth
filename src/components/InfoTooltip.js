@@ -8,8 +8,7 @@ function InfoTooltip(props) {
     return (
         <PopupWithForm
             name="register"
-            title={props.isStatusTitleOk ? `Вы успешно зарегистрировались!` : `Что-то пошло не так!
-            Попробуйте ещё раз.`}
+            title={props.isStatusTitleOk ? `Вы успешно зарегистрировались!` : props.error}
             isOpen={props.isOpen}
             onClose={props.onClose}
             image={
