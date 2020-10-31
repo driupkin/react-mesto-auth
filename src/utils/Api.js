@@ -16,7 +16,8 @@ class Api {
 
     _handleResponseError(err) {
         console.log('_handleResponseError')
-        return Promise.reject(err.message)
+        // return Promise.reject(err.message)
+        return err;
     }
     
     editProfile(values) {

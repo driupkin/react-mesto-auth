@@ -4,14 +4,14 @@ function handleResponse(res) {
     if (res.ok) {
         return res.json();
     } else {
-        console.log('handleResponse rejection')
-        return Promise.reject(`Ошибка: ${res.status}`)
+        console.log(res)
+        return Promise.reject(`Ошибка: ${res.statusText}`)
     }
 }
 
 function handleResponseError(err) {
     console.log('handleResponseError')
-    return Promise.reject(err.message)
+    return Promise.reject(err)
 }
 
 export const register = (email, password) => {
@@ -22,9 +22,9 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({ email, password })
     })
-    .then(handleResponse)
-    .then(data => {return data})
-    .catch(handleResponseError);
+        .then(handleResponse)
+        .then(data => { return data })
+        .catch(handleResponseError);
 };
 
 export const authorize = (email, password) => {
@@ -54,6 +54,6 @@ export const getContent = (token, rout) => {
         }
     })
         .then(handleResponse)
-        .then(data => {return data})
+        .then(data => { return data })
         .catch(handleResponseError);
 };

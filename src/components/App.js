@@ -41,7 +41,11 @@ function App() {
 
   const history = useHistory();
 
-  React.useEffect(() => tokenCheck(), [loggedIn]);
+  React.useEffect(() => {
+    if (tokenCheck()) {
+      getAllContent();
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
     function closeAllPopupsByOverlay(e) {
@@ -87,7 +91,7 @@ function App() {
   }
 
   function handleUpdateUser(values) {
-    apiMe(localStorage.getItem('jwt')).editProfile(values)
+    apiMe(tokenCheck()).editProfile(values)
       .then(data => {
         setCurrentUser(data);
       })
@@ -97,7 +101,7 @@ function App() {
   }
 
   function handleUpdateAvatar(url) {
-    apiMe(localStorage.getItem('jwt')).changeAvatar(url.avatar)
+    apiMe(tokenCheck()).changeAvatar(url.avatar)
       .then(data => {
         setCurrentUser(data);
       })
@@ -107,7 +111,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(values) {
-    apiCards(localStorage.getItem('jwt')).addCard(values)
+    apiCards(tokenCheck()).addCard(values)
       .then(newCard => setCards([...cards, newCard]))
       .catch((err) => {
         console.log(err);
@@ -118,8 +122,8 @@ function App() {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i === currentUser._id);
     (isLiked
-      ? apiCards(localStorage.getItem('jwt')).deleteLike(card._id)
-      : apiCards(localStorage.getItem('jwt')).putLike(card._id))
+      ? apiCards(tokenCheck()).deleteLike(card._id)
+      : apiCards(tokenCheck()).putLike(card._id))
       .then(newCard => {
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         setCards(newCards);
@@ -130,18 +134,21 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    apiCards(localStorage.getItem('jwt')).deleteCard(card._id)
+    apiCards(tokenCheck()).deleteCard(card._id)
       .then(() => {
         const newCards = cards.filter(item => item._id === card._id ? '' : item);
         setCards(newCards);
       }
       );
   }
-
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      auth.getContent(jwt, 'users/me')
+    return jwt;
+  }
+
+  function getMyContent() {
+    if (tokenCheck()) {
+      auth.getContent(tokenCheck(), 'users/me')
         .then((res) => {
           if (res) {
             setHeaderTitle({
@@ -149,20 +156,6 @@ function App() {
               link: "signin",
               email: res.email
             });
-            // Получаем карточки
-            auth.getContent(jwt, 'cards')
-              .then(data => {
-                // Если пользователь удален, заполняем ключ owner
-                data.map(element => {
-                  if (!element.owner) {
-                    element.owner = "Пользователь удален!";
-                  }
-                });
-                setCards(data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
             setCurrentUser(res);
             setLoggedIn(true);
             history.push('/');
@@ -173,6 +166,26 @@ function App() {
     return;
   }
 
+  function getAllContent() {
+    if (tokenCheck()) {
+      auth.getContent(tokenCheck(), 'cards')
+        .then(data => {
+          // Если пользователь удален, заполняем ключ owner
+          data.map(element => {
+            if (!element.owner) {
+              element.owner = "Пользователь удален!";
+            }
+          });
+          getMyContent();
+          setCards(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return;
+    }
+  }
+  
   function signOut() {
     localStorage.removeItem('jwt');
     history.push('/signin');
@@ -182,7 +195,7 @@ function App() {
     auth.authorize(email, password)
       .then(data => {
         if (data.token) {
-          tokenCheck();
+          getAllContent();
         }
       })
       .catch((err) => {
@@ -208,7 +221,7 @@ function App() {
         setIsResStatusOk(false);
         setIsInfoTooltip(true);
       });
-      
+
     return;
   }
 
